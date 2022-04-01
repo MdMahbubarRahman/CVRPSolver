@@ -55,16 +55,6 @@ int main(){
         myFile.close();
     }
     
-    //std::cout << "Show road distance matrix" << std::endl;
-    //std::cout << "size of the roadDistance matrix : " << roadDistance.size() << std::endl;
-    //for (int i = 0; i < roadDistance.size(); i++) {
-    //    for (int j = 0; j < roadDistance.size(); j++) {
-    //        std::cout << roadDistance[i][j] << " ";
-    //    }
-    //    std::cout << ";" << std::endl;
-    //}
-    
-
     //open aerial distance data file
     myFile.open("GCDistanceMatrix.txt", std::ios::in);//read
     std::vector<std::vector<double>> aerialDistance;
@@ -93,7 +83,7 @@ int main(){
         }
         myFile.close();
     }
-    //
+    
     //std::cout << "Show aerial distance matrix" << std::endl;
     //std::cout << "size of the aerialDistance matrix : " << aerialDistance.size() << std::endl;
     //for (int i = 0; i < aerialDistance.size(); i++) {
@@ -103,28 +93,6 @@ int main(){
     //    std::cout << ";" << std::endl;
     //}
     
-
-    std::cout << " Populate customer cluster" << std::endl;
-    std::set<int> cusCluster;
-    for (int i = 11; i <= NUMBER_OF_NODES; i++) {
-        cusCluster.insert(i);
-    }
-    std::cout << "Populate depot/satellite cluster" << std::endl;
-    std::set<int> satCluster;
-    for (int i = 0; i <= 10; i++) {
-        satCluster.insert(i);
-    }
-    std::cout << "Populate demand for the customers" << std::endl;
-    std::map<int, int> demand;
-    for (int i = 11; i <= NUMBER_OF_NODES; i++) {
-        demand.insert(std::pair<int, int>(i,1));//unit demand
-    }
-
-    std::cout << " Populate customers must serve by first echelon vehicle" << std::endl;
-    std::set<int> customersMustServeByFirstEchelon;
-    customersMustServeByFirstEchelon.insert(15);
-    customersMustServeByFirstEchelon.insert(20);
-
     
 
 
