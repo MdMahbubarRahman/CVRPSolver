@@ -47,7 +47,7 @@ HungarianAlg::HungarianAlg(std::vector<int> initTsp, std::vector<std::vector<dou
 
 //performs row reduction
 void HungarianAlg::performRowColumnReduction() {
-	//std::cout << "\nPerform row reduction" << std::endl;
+	std::cout << "\nPerform row reduction" << std::endl;
 	for (int i = 0; i < reducedCostMatrixSize; i++) {
 		double minVal = INFINITY;
 		for (int j = 0; j < reducedCostMatrixSize; j++) {
@@ -60,8 +60,8 @@ void HungarianAlg::performRowColumnReduction() {
 		}
 		reducedCost += minVal;
 	}
-	
-	//std::cout << "\nPerform column reduction." << std::endl;
+
+	std::cout << "\nPerform column reduction." << std::endl;
 	for (int i = 0; i < reducedCostMatrixSize; i++) {
 		double minVal = INFINITY;
 		for (int j = 0; j < reducedCostMatrixSize; j++) {
@@ -79,7 +79,7 @@ void HungarianAlg::performRowColumnReduction() {
 
 //perform row scanning
 void HungarianAlg::rowScanning(std::set<int>& coveredRows, std::set<int>& coveredColumns, std::map<int, int>& boxPoints) {
-	//std::cout << "\nRow scanning in progress!" << std::endl;
+	std::cout << "\nRow scanning in progress!" << std::endl;
 	for (int i = 0; i < reducedCostMatrixSize; i++) {
 		auto it = coveredRows.find(i);
 		if (it == coveredRows.end()) {
@@ -103,7 +103,7 @@ void HungarianAlg::rowScanning(std::set<int>& coveredRows, std::set<int>& covere
 
 //perform column scanning
 void HungarianAlg::columnScanning(std::set<int>& coveredRows, std::set<int>& coveredColumns, std::map<int, int>& boxPoints) {
-	//std::cout << "\nColumn scanning in progress!" << std::endl;
+	std::cout << "\nColumn scanning in progress!" << std::endl;
 	for (int i = 0; i < reducedCostMatrixSize; i++) {
 		auto it = coveredColumns.find(i);
 		if (it == coveredColumns.end()) {
@@ -127,10 +127,10 @@ void HungarianAlg::columnScanning(std::set<int>& coveredRows, std::set<int>& cov
 
 //scan for the number of uncovered zeros
 int HungarianAlg::uncoveredZeroScanning(std::set<int>& coveredRows, std::set<int>& coveredColumns) {
-	//std::cout << "\nNumber of uncovered zero scanning in progress!" << std::endl;
+	std::cout << "\nNumber of uncovered zero scanning in progress!" << std::endl;
 	std::map<int, int> numZeroInRow;
 	std::map<int, int> numZeroInCol;
-	//std::cout << "\nUpdate number of uncovered zeros in each row." << std::endl;
+	std::cout << "\nUpdate number of uncovered zeros in each row." << std::endl;
 	for (int i = 0; i < reducedCostMatrixSize; i++) {
 		auto itr = coveredRows.find(i);
 		if (itr == coveredRows.end()) {
@@ -144,7 +144,7 @@ int HungarianAlg::uncoveredZeroScanning(std::set<int>& coveredRows, std::set<int
 			numZeroInRow.insert(std::pair<int, int>(i, numZero));
 		}
 	}
-	//std::cout << "\nUpdate number of uncovered zeros in each column." << std::endl;
+	std::cout << "\nUpdate number of uncovered zeros in each column." << std::endl;
 	for (int i = 0; i < reducedCostMatrixSize; i++) {
 		auto itr = coveredColumns.find(i);
 		if (itr == coveredColumns.end()) {
@@ -336,7 +336,13 @@ void HungarianAlg::populateListOfRoutes(std::map<int, int> boxPoints) {
 	std::map<int, int> newAssignments;
 	newAssignments = boxPoints;
 	int i = 0;
+	int counter = 0;
 	while (!newAssignments.empty()) {
+		counter++;
+		if (counter > 2 * boxPoints.size()) {
+			hStatus = HungarianAlgTerminatedWithErrors;
+			break;
+		}
 		if (i == 0) {
 			auto it = newAssignments.begin();
 			routeStartNode = (*it).first;
@@ -359,7 +365,10 @@ void HungarianAlg::populateListOfRoutes(std::map<int, int> boxPoints) {
 				i += 1;
 			}
 		}
-	}	
+	}
+	if (hStatus != HungarianAlgTerminatedWithErrors) {
+		hStatus = HungarianAlgTerminatedSuccessfully;
+	}
 }
 
 //solves relaxed tsp problem which is an assignment problem and generates lower bound of TSP
@@ -415,3 +424,6 @@ void HungarianAlg::showAssignmentSolution() {
 	}
 }
 
+HungarianAlgStatus HungarianAlg::getHungarianAlgStatus() {
+	return hStatus;
+}

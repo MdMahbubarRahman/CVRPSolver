@@ -21,7 +21,7 @@ BranchAndBoundSolver::BranchAndBoundSolver(std::vector<int> initialTourOfCities,
 	double val = 0;
 	for (int i = 0; i < oldListOfCities.size(); i++) {
 		std::vector<double> costVec;
-		for (int j = 0; j < oldListOfCities.size(); j++) {	
+		for (int j = 0; j < oldListOfCities.size(); j++) {
 			//std::cout << "\ni index : " << i << " j index : " << j << std::endl;
 			i == j ? val = INFINITY : val = wholeCostMatrix[oldListOfCities.at(i)][oldListOfCities.at(j)];
 			costVec.push_back(val);
@@ -64,8 +64,12 @@ void BranchAndBoundSolver::solveAssignmentProblem() {
 	hungAlg.runHungarianAlg();
 	routeLists = hungAlg.getListOfRoutes();
 	assignmentSolution = hungAlg.getAssignmentSolution();
+	HungarianAlgStatus hStatus = hungAlg.getHungarianAlgStatus();
+	if (hStatus == HungarianAlgTerminatedWithErrors) {
+		bStatus = TerminatedWithErrors;
+	}
 }
- 
+
 //generate basic solution for equivalent transportation problem
 void BranchAndBoundSolver::generateBasicTransportationSolution() {
 	double M = INFINITY;
@@ -117,7 +121,7 @@ void BranchAndBoundSolver::generateBasicTransportationSolution() {
 	std::multimap<int, int> columnMap;
 	for (auto& it : transportationSolution) {
 		columnMap.insert(std::pair<int, int>(it.second, it.first));
-		counter += 1; 
+		counter += 1;
 	}
 	//column scanning for the acyclic connected graph
 	if (counter < (2 * size - 1)) {
@@ -156,7 +160,7 @@ void BranchAndBoundSolver::generateBasicTransportationSolution() {
 		assignedValueMap[it.first][it.second] = 1.0;
 	}
 	//populate the transportation basic solution
-	for (auto & it:transportationSolution) {
+	for (auto& it : transportationSolution) {
 		BasicCell base = BasicCell();
 		base.rowID = it.first;
 		base.colID = it.second;
@@ -174,22 +178,24 @@ void BranchAndBoundSolver::generateBasicTransportationSolution() {
 //initialize the branch and bound tree
 void BranchAndBoundSolver::initBranchAndBoundTree() {
 	solveAssignmentProblem();
-	generateBasicTransportationSolution();
-	OperatorTheory operThry = OperatorTheory(transportationBasicSolution, costTableau);
-	operThry.runCostOperatorForGeneratingRootNodes();
-	//operThry.showChildNodes();
-	std::list<Node> rootNodes = operThry.getChildNodes();
-	//populate branch and bound tree
-	int counter = 0;
-	bbTree.numOfNodePrunedByBound = 0;
-	bbTree.numOfNodePrunedByIntegrality = 0;
-	bbTree.numOfNodePrunedWithErrorsOrInfeasibility = 0;
-	for (auto & it: rootNodes) {
-		bbTree.branchNodes.push_back(it);
-		counter += 1;
+	if (bStatus != TerminatedWithErrors) {
+		generateBasicTransportationSolution();
+		OperatorTheory operThry = OperatorTheory(transportationBasicSolution, costTableau);
+		operThry.runCostOperatorForGeneratingRootNodes();
+		//operThry.showChildNodes();
+		std::list<Node> rootNodes = operThry.getChildNodes();
+		//populate branch and bound tree
+		int counter = 0;
+		bbTree.numOfNodePrunedByBound = 0;
+		bbTree.numOfNodePrunedByIntegrality = 0;
+		bbTree.numOfNodePrunedWithErrorsOrInfeasibility = 0;
+		for (auto& it : rootNodes) {
+			bbTree.branchNodes.push_back(it);
+			counter += 1;
+		}
+		bbTree.currentNumOfNodes = counter;
+		//std::cout << "\nNumber of current nodes : " << counter << std::endl;
 	}
-	bbTree.currentNumOfNodes = counter;
-	//std::cout << "\nNumber of current nodes : " << counter << std::endl;
 }
 
 //returns tsp solution if any exists
@@ -207,7 +213,7 @@ void BranchAndBoundSolver::pruneNodeByIntegrality() {
 			std::cout << "\nTour solution has been found!" << std::endl;
 		}
 	}
-	while(!singleTourNodes.empty()){
+	while (!singleTourNodes.empty()) {
 		std::map<int, int> tour;
 		std::vector<int> route;
 		int sourceNode = 0;
@@ -216,7 +222,7 @@ void BranchAndBoundSolver::pruneNodeByIntegrality() {
 		auto id = singleTourNodes.begin();
 		nodeId = *id;
 		std::map<int, int> newAssignments;
-		for (auto & it: (*nodeId).basicSolution) {
+		for (auto& it : (*nodeId).basicSolution) {
 			if (it.value == 1.0) {
 				newAssignments.insert(std::pair<int, int>(it.rowID, it.colID));
 			}
@@ -310,7 +316,7 @@ void BranchAndBoundSolver::solveNodeByCostOperator(Node node) {
 void BranchAndBoundSolver::checkForBBOptimality() {
 	double val = INFINITY;
 	int value = 0;
-	for (auto & it: bbTree.branchNodes) {
+	for (auto& it : bbTree.branchNodes) {
 		value++;
 		//std::cout << "\nNode id : " << value << ", weaker lower bound : " << it.weakerLowerBound << std::endl;
 		if (it.weakerLowerBound < val) {
@@ -344,7 +350,7 @@ void BranchAndBoundSolver::runBranchAndBoundSolver() {
 	//tsp solution with respect to the original node node identities
 	tspSolution.cost = incumbent.objValue;
 	int val = 0;
-	for (auto & it: incumbent.tour) {
+	for (auto& it : incumbent.tour) {
 		val = newCityToOldCityMap[it];
 		tspSolution.tour.push_back(val);
 	}

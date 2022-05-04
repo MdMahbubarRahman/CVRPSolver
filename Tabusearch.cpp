@@ -1,6 +1,5 @@
 #include "Tabusearch.h"
 
-
 //default constructor
 TabuList::TabuList() {
 	//std::cout << "The default constructor of the tabu list has been called!" << std::endl;
@@ -12,7 +11,7 @@ TabuList::TabuList(int routeNum, int customerID) {
 }
 
 //copy constructor
-TabuList::TabuList(const TabuList & tbList) {
+TabuList::TabuList(const TabuList& tbList) {
 	//std::cout << "The copy constructor of the TabuList class has been called!" << std::endl;
 	tabuList = tbList.tabuList;
 }
@@ -36,7 +35,7 @@ void TabuList::addToTabuList(int routeNum, int customerID) {
 }
 
 //return contents of the tabu list
-std::multimap<int, int> TabuList::getTabuList(){
+std::multimap<int, int> TabuList::getTabuList() {
 	return tabuList;
 }
 
@@ -55,7 +54,7 @@ bool TabuList::checkInTabuList(int routeNum, int customerID) {
 			}
 		}
 	}
-	return flag;	
+	return flag;
 }
 
 //default constructor
@@ -91,24 +90,24 @@ FeasibleSolution::FeasibleSolution() {
 }
 
 //constructor
-FeasibleSolution::FeasibleSolution(std::list<int> sol, double cost, int sepIntVal, int srcRoute, int addNode){
-	solCost			 = cost;
-	separatorIntVal  = sepIntVal;
-	sourceRoute		 = srcRoute;
-	addedNode		 = addNode;
+FeasibleSolution::FeasibleSolution(std::list<int> sol, double cost, int sepIntVal, int srcRoute, int addNode) {
+	solCost = cost;
+	separatorIntVal = sepIntVal;
+	sourceRoute = srcRoute;
+	addedNode = addNode;
 	if (!sol.empty())
 		solution = sol;
 	else {
 		std::cout << "The solution vector is empty! Feasible Solution object could not be formed." << std::endl;
-	}	
+	}
 }
 
 //copy constructor
-FeasibleSolution::FeasibleSolution(const FeasibleSolution & febSol) {
-	solCost			= febSol.solCost;
+FeasibleSolution::FeasibleSolution(const FeasibleSolution& febSol) {
+	solCost = febSol.solCost;
 	separatorIntVal = febSol.separatorIntVal;
-	sourceRoute	    = febSol.sourceRoute;
-	addedNode	    = febSol.addedNode;
+	sourceRoute = febSol.sourceRoute;
+	addedNode = febSol.addedNode;
 	if (!febSol.solution.empty())
 		solution = febSol.solution;
 	else {
@@ -121,10 +120,10 @@ void FeasibleSolution::showSolution() const {
 	if (!solution.empty()) {
 		std::cout << "The solution is : ";
 		for (const auto& iter : solution) {
-			std::cout << iter << " "; 
+			std::cout << iter << " ";
 		}
-		std::cout <<";"<< std::endl;
-		std::cout << "The cost of the solution is : "<< solCost <<std::endl;
+		std::cout << ";" << std::endl;
+		std::cout << "The cost of the solution is : " << solCost << std::endl;
 		std::cout << "The separtor interger value is : " << separatorIntVal << std::endl;
 		std::cout << "The added Node is : " << addedNode << std::endl;
 		std::cout << "The node is added from Route : " << sourceRoute << std::endl;
@@ -164,7 +163,7 @@ Neighbourhood::Neighbourhood(const Neighbourhood& neighbour) {
 	else {
 		//std::cout << "The neighbourhood solution is empty! The copy constructor fails." << std::endl;
 	}
-		
+
 	if (!neighbour.kNeighbourSolution.empty()) {
 		kNeighbourSolution = neighbour.kNeighbourSolution;
 	}
@@ -181,14 +180,14 @@ void Neighbourhood::insertToNeighbour(FeasibleSolution neighbour) {
 //inserts neighbour solutions to the kneighbour solution list
 void Neighbourhood::insertToKNeighbour() {
 	if (!neighbourSolution.empty()) {
-		for (const auto &it : neighbourSolution) {
+		for (const auto& it : neighbourSolution) {
 			kNeighbourSolution.push_back((it));
 		}
 		neighbourSolution.clear();
 	}
 	else {
 		//std::cout << "\nThe neighbour solution list is empty!" << std::endl;
-	}	
+	}
 }
 
 //shows neighbouring solutions
@@ -204,7 +203,7 @@ void Neighbourhood::showNeighbours() {
 	}
 	else {
 		//std::cout << "\nThe neighbour solution list is empty!" << std::endl;
-	}	
+	}
 }
 
 //shows all k neighbour solutions
@@ -212,7 +211,7 @@ void Neighbourhood::showKNeighbours() {
 	int i = 1;
 	if (!kNeighbourSolution.empty()) {
 		std::cout << "\nThe k neighbour solutions are : " << std::endl;
-		for (const auto &it : kNeighbourSolution) {
+		for (const auto& it : kNeighbourSolution) {
 			std::cout << "Solution no : " << i << std::endl;
 			it.showSolution();
 			i++;
@@ -220,7 +219,7 @@ void Neighbourhood::showKNeighbours() {
 	}
 	else {
 		std::cout << "\nThe k neighbour solution list is empty!" << std::endl;
-	}	
+	}
 }
 
 //returns neighbour solutions
@@ -252,7 +251,7 @@ FeasibleSolution Neighbourhood::getBestFromNeighbour() {
 	}
 	else {
 		//std::cout << "\nThe neighbour solution list is empty!" << std::endl;
-	}	
+	}
 	return bestSol;
 }
 
@@ -261,7 +260,7 @@ FeasibleSolution Neighbourhood::getBestFromKNeighbour() {
 	double cost = INFINITY;
 	FeasibleSolution iter;
 	if (!kNeighbourSolution.empty()) {
-		for (auto & it : kNeighbourSolution) {
+		for (auto& it : kNeighbourSolution) {
 			if (it.getCost() < cost) {
 				cost = it.getCost();
 				iter = it;
@@ -317,7 +316,7 @@ Tabusearch::Tabusearch(FeasibleSolution febSol, std::map<int, int> demandVec, st
 }
 
 //copy constructor
-Tabusearch::Tabusearch(const Tabusearch & tabusrch) {
+Tabusearch::Tabusearch(const Tabusearch& tabusrch) {
 	std::cout << "The TabuSearch copy constructor has been called!" << std::endl;
 	kChain = tabusrch.kChain;
 	swapChain = tabusrch.swapChain;
@@ -366,9 +365,9 @@ void Tabusearch::generateRouteCustomerMap(FeasibleSolution febSol) {
 				listOfRoutes.push_back(routeVector);
 				routeVector.clear();
 			}
-		}	
+		}
 	}
-	flag == true? numberOfRoutes = routeID : numberOfRoutes = (routeID-1);
+	flag == true ? numberOfRoutes = routeID : numberOfRoutes = (routeID - 1);
 }
 
 //randomly select add and drop routes
@@ -396,7 +395,7 @@ FeasibleSolution Tabusearch::generateNeighbourByAddDrop(std::list<std::list<int>
 	double currentDropRouteCost = 0.0;
 	double newDropRouteCost = 0.0;
 	int iterator = 1;
-	for (auto &iter : newRoutes) {
+	for (auto& iter : newRoutes) {
 		if (iterator == addToRoute) {
 			//calculate current Add Route cost
 			int val = sepInt;
@@ -426,8 +425,8 @@ FeasibleSolution Tabusearch::generateNeighbourByAddDrop(std::list<std::list<int>
 			}
 			//update Add route  
 			int n = 0;
-			if(l==iter.size()){
-				iter.push_back(dropNode);			
+			if (l == iter.size()) {
+				iter.push_back(dropNode);
 			}
 			else {
 				for (auto it = iter.begin(); it != iter.end(); ++it) {
@@ -458,7 +457,7 @@ FeasibleSolution Tabusearch::generateNeighbourByAddDrop(std::list<std::list<int>
 				if (iter.size() == 1) {
 					newDropRouteCost = 0.0;
 					iter.erase(it);
-					iter.push_back(sepInt); 
+					iter.push_back(sepInt);
 					//potential point to look at later!
 					break;
 				}
@@ -479,7 +478,7 @@ FeasibleSolution Tabusearch::generateNeighbourByAddDrop(std::list<std::list<int>
 						break;
 					}
 					j++;
-				}					
+				}
 			}
 			if (iter.size() != 1) {
 				newDropRouteCost = currentDropRouteCost - distanceMatrix[preVal][vall] - distanceMatrix[vall][postVal] + distanceMatrix[preVal][postVal];
@@ -501,7 +500,7 @@ FeasibleSolution Tabusearch::generateNeighbourByAddDrop(std::list<std::list<int>
 	//generate solution vector
 	std::list<int> solution;
 	for (auto iter = newRoutes.begin(); iter != newRoutes.end(); ++iter) {
-		for (auto it = (*iter).begin();  it != (*iter).end(); ++it) {
+		for (auto it = (*iter).begin(); it != (*iter).end(); ++it) {
 			solution.push_back(*it);
 		}
 		solution.push_back(sepInt);
@@ -521,7 +520,7 @@ FeasibleSolution Tabusearch::generateNeighbourByOneSwap(std::list<std::list<int>
 	int firstRouteCapacity = 0;
 	int secondRouteCapacity = 0;
 	int iterator = 1;
-	for (auto &iter : newRoutes) {
+	for (auto& iter : newRoutes) {
 		if (iterator == firstRoute) {
 			int val = sepInt;
 			for (auto it = iter.begin(); it != iter.end(); ++it) {
@@ -581,7 +580,7 @@ FeasibleSolution Tabusearch::generateNeighbourByOneSwap(std::list<std::list<int>
 	//n^2 computational complexity
 	for (int i = 0; i < firstRt.size(); ++i) {
 		for (int j = 0; j < secondRt.size(); ++j) {
-			if (firstRt.size() ==1) {
+			if (firstRt.size() == 1) {
 				firstPreVal = sepInt;
 				firstPostVal = sepInt;
 				//std::cout << "first if" << std::endl;
@@ -591,12 +590,12 @@ FeasibleSolution Tabusearch::generateNeighbourByOneSwap(std::list<std::list<int>
 				secondPostVal = sepInt;
 				//std::cout << "second if" << std::endl;
 			}
-			if (firstRt.size() > 1 && i==0) {
+			if (firstRt.size() > 1 && i == 0) {
 				firstPreVal = sepInt;
-				firstPostVal = firstRt.at(i+1);
+				firstPostVal = firstRt.at(i + 1);
 				//std::cout << "third if" << std::endl;
 			}
-			if (firstRt.size() > 1 && i == (firstRt.size()-1)) {
+			if (firstRt.size() > 1 && i == (firstRt.size() - 1)) {
 				firstPreVal = firstRt.at(i - 1);
 				firstPostVal = sepInt;
 				//std::cout << "fourth if" << std::endl;
@@ -638,7 +637,7 @@ FeasibleSolution Tabusearch::generateNeighbourByOneSwap(std::list<std::list<int>
 	//update routes and generate new solution
 	std::list<int> solution;
 	iterator = 1;
-	for (auto &iter : newRoutes) {
+	for (auto& iter : newRoutes) {
 		if (iterator == firstRoute) {
 			int i = 0;
 			//std::cout << "first route" << std::endl;
@@ -667,7 +666,7 @@ FeasibleSolution Tabusearch::generateNeighbourByOneSwap(std::list<std::list<int>
 			for (auto& it : iter) {
 				solution.push_back(it);
 			}
-		} 
+		}
 		solution.push_back(sepInt);
 		iterator += 1;
 	}
@@ -717,7 +716,7 @@ void Tabusearch::generateKChainNeighbourSolutions() {
 		//get iteration best solution and delete from the neighbour solutions
 		//if the best move is tabu but safisfies aspiration criteria then proceed 
 		//otherwise get new best solution which is not tabu
-		while(!neighbourHood.getNeighbourSolutions().empty()) {
+		while (!neighbourHood.getNeighbourSolutions().empty()) {
 			FeasibleSolution febSol = neighbourHood.getBestFromNeighbour();
 			//std::cout << "The iteration best solution is : " << std::endl;
 			//febSol.showSolution();
@@ -747,7 +746,7 @@ void Tabusearch::generateKChainNeighbourSolutions() {
 }
 
 //generate one swap solutions
-void Tabusearch::generateOneSwapSolutions(){
+void Tabusearch::generateOneSwapSolutions() {
 	iterationBestSolution = incumbentSolution;
 	for (int i = 0; i < swapChain; ++i) {
 		//generate route to customer map
@@ -788,7 +787,7 @@ void Tabusearch::generateOneSwapSolutions(){
 
 //runs tabu search algoirthm
 void Tabusearch::runTabuSearch() {
-	int MaxIter = 10;
+	int MaxIter = 5;
 	int nonImprovingIterationLimit = 5;
 	auto start = high_resolution_clock::now();
 	using std::chrono::duration;
@@ -814,7 +813,7 @@ void Tabusearch::runTabuSearch() {
 			break;
 		}
 	}
-    performTspHeuristics();
+	performTspHeuristics();
 	auto stop = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = stop - start;
 	//showTabuSolution();
@@ -864,131 +863,193 @@ void Tabusearch::performTspHeuristics() {
 		//run tsp heuristic
 		int siz = route.size();
 		int MaxIter = 0;
-		if (siz <= 4) {
-			MaxIter = 1;
-		}
-		else if (siz >= 5 && siz <= 6) {
-			MaxIter = 3;
-		}
-		else if (siz >= 7 && siz <= 10) {
-			MaxIter = 6;
-		}
-		else {
-			MaxIter = 10;
-		}
-		//start
-		for (int iter = 1; iter <= MaxIter; iter++) {
-			double costA = 0;
-			double costB = 0;
-			double costC = 0;
-			double costD = 0;
-			double costDiff = 0;
-			int c1 = 0;
-			int c2 = 0;
-			int c3 = 0;
-			int c4 = 0;
-			for (int i = 0; i < route.size() - 1; i++) {
-				if (i == 0) {
-					for (int j = i + 2; j < route.size() - 2; j++) {
-						costA = costMatrix[route.at(i)][route.at(i + 1)];
-						costB = costMatrix[route.at(j)][route.at(j + 1)];
-						costC = costMatrix[route.at(i)][route.at(j)];
-						costD = costMatrix[route.at(i + 1)][route.at(j + 1)];
-						if (costDiff < (costA + costB - costC - costD)) {
-							costDiff = (costA + costB - costC - costD);
-							c1 = i;
-							c2 = i + 1;
-							c3 = j;
-							c4 = j + 1;
+		if (siz <= 4) {//later this number needs to be customized
+			MaxIter = 2;
+			//start
+			for (int iter = 1; iter <= MaxIter; iter++) {
+				double costA = 0;
+				double costB = 0;
+				double costC = 0;
+				double costD = 0;
+				double costDiff = 0;
+				int c1 = 0;
+				int c2 = 0;
+				int c3 = 0;
+				int c4 = 0;
+				for (int i = 0; i < route.size() - 1; i++) {
+					if (i == 0) {
+						for (int j = i + 2; j < route.size() - 2; j++) {
+							costA = costMatrix[route.at(i)][route.at(i + 1)];
+							costB = costMatrix[route.at(j)][route.at(j + 1)];
+							costC = costMatrix[route.at(i)][route.at(j)];
+							costD = costMatrix[route.at(i + 1)][route.at(j + 1)];
+							if (costDiff < (costA + costB - costC - costD)) {
+								costDiff = (costA + costB - costC - costD);
+								c1 = i;
+								c2 = i + 1;
+								c3 = j;
+								c4 = j + 1;
+							}
 						}
-					}
-				}
-				else {
-					for (int k = 0; k < i - 1; k++) {
-						costA = costMatrix[route.at(i)][route.at(i + 1)];
-						costB = costMatrix[route.at(k)][route.at(k + 1)];
-						costC = costMatrix[route.at(k)][route.at(i)];
-						costD = costMatrix[route.at(k + 1)][route.at(i + 1)];
-						if (costDiff < (costA + costB - costC - costD)) {
-							costDiff = (costA + costB - costC - costD);
-							c1 = i;
-							c2 = i + 1;
-							c3 = k;
-							c4 = k + 1;
-						}
-					}
-					for (int j = i + 2; j < route.size() - 1; j++) {
-						costA = costMatrix[route.at(i)][route.at(i + 1)];
-						costB = costMatrix[route.at(j)][route.at(j + 1)];
-						costC = costMatrix[route.at(i)][route.at(j)];
-						costD = costMatrix[route.at(i + 1)][route.at(j + 1)];
-						if (costDiff < (costA + costB - costC - costD)) {
-							costDiff = (costA + costB - costC - costD);
-							c1 = i;
-							c2 = i + 1;
-							c3 = j;
-							c4 = j + 1;
-						}
-					}
-				}
-			}
-			//std::cout << "\nThe improved route is the following." << std::endl;
-			int val1 = route.at(c2);
-			int val2 = route.at(c3);
-			route[c2] = val2;
-			route[c3] = val1;
-			//std::cout << "\nThe improved route is :" << std::endl;
-			//for (auto it : route) {
-			//	std::cout << it << " ";
-			//}
-			//std::cout << ";" << std::endl;
-			//need to fix route for the sepIntVal node
-			//need to keep track of the route cost to know whether route has changed or not
-			std::vector<int> newRoute;
-			std::vector<int> routeHead;
-			std::vector<int> routeTail;
-			bool flagT = false;
-			bool flagH = false;
-			for (auto val : route) {
-				if (val != sepIntVal && flagT == false) {
-					routeTail.push_back(val);
-				}
-				else if (val != sepIntVal && flagH == true) {
-					routeHead.push_back(val);
-				}
-				else if (val == sepIntVal && flagT == false && flagH == false) {
-					if (routeTail.size() != 0) {
-						routeTail.push_back(val);
-						flagT = true;
 					}
 					else {
+						for (int k = 0; k < i - 1; k++) {
+							costA = costMatrix[route.at(i)][route.at(i + 1)];
+							costB = costMatrix[route.at(k)][route.at(k + 1)];
+							costC = costMatrix[route.at(k)][route.at(i)];
+							costD = costMatrix[route.at(k + 1)][route.at(i + 1)];
+							if (costDiff < (costA + costB - costC - costD)) {
+								costDiff = (costA + costB - costC - costD);
+								c1 = i;
+								c2 = i + 1;
+								c3 = k;
+								c4 = k + 1;
+							}
+						}
+						for (int j = i + 2; j < route.size() - 1; j++) {
+							costA = costMatrix[route.at(i)][route.at(i + 1)];
+							costB = costMatrix[route.at(j)][route.at(j + 1)];
+							costC = costMatrix[route.at(i)][route.at(j)];
+							costD = costMatrix[route.at(i + 1)][route.at(j + 1)];
+							if (costDiff < (costA + costB - costC - costD)) {
+								costDiff = (costA + costB - costC - costD);
+								c1 = i;
+								c2 = i + 1;
+								c3 = j;
+								c4 = j + 1;
+							}
+						}
+					}
+				}
+				//std::cout << "\nThe improved route is the following." << std::endl;
+				int val1 = route.at(c2);
+				int val2 = route.at(c3);
+				route[c2] = val2;
+				route[c3] = val1;
+				//std::cout << "\nThe improved route is :" << std::endl;
+				//for (auto it : route) {
+				//	std::cout << it << " ";
+				//}
+				//std::cout << ";" << std::endl;
+				//need to fix route for the sepIntVal node
+				//need to keep track of the route cost to know whether route has changed or not
+				std::vector<int> newRoute;
+				std::vector<int> routeHead;
+				std::vector<int> routeTail;
+				bool flagT = false;
+				bool flagH = false;
+				for (auto val : route) {
+					if (val != sepIntVal && flagT == false) {
+						routeTail.push_back(val);
+					}
+					else if (val != sepIntVal && flagH == true) {
+						routeHead.push_back(val);
+					}
+					else if (val == sepIntVal && flagT == false && flagH == false) {
+						if (routeTail.size() != 0) {
+							routeTail.push_back(val);
+							flagT = true;
+						}
+						else {
+							routeHead.push_back(val);
+							flagH = true;
+						}
+					}
+					else if (val == sepIntVal && flagT == true && flagH == false) {
 						routeHead.push_back(val);
 						flagH = true;
 					}
+					else if (val == sepIntVal && flagT == false && flagH == true) {
+						routeTail.push_back(val);
+						flagT = true;
+					}
 				}
-				else if (val == sepIntVal && flagT == true && flagH == false) {
-					routeHead.push_back(val);
-					flagH = true;
+				//populate new route
+				for (auto it : routeHead) {
+					newRoute.push_back(it);
 				}
-				else if (val == sepIntVal && flagT == false && flagH == true) {
-					routeTail.push_back(val);
-					flagT = true;
+				for (auto it : routeTail) {
+					newRoute.push_back(it);
 				}
+				//std::cout << "\nNew route: " << std::endl;
+				//for (auto it: newRoute) {
+				//	std::cout << it << " ";
+				//}
+				for (int i = 0; i < route.size(); i++) {
+					route[i] = newRoute.at(i);
+				}
+			}
+		}
+		else {
+			std::vector<int> tour;
+			int countNoSepInt = 0;
+			std::cout << " " << std::endl;
+			for (auto it : route) {
+				std::cout << it << " ";
+				if (it != sepIntVal) {
+					tour.push_back(it);
+				}
+				else if (it == sepIntVal && countNoSepInt < 1) {
+					tour.push_back(it);
+					countNoSepInt++;
+				}
+			}
+			std::cout << " " << std::endl;
+			BranchAndBoundSolver bbSolver = BranchAndBoundSolver(tour, distanceMatrix);
+			bbSolver.runBranchAndBoundSolver();
+			TSPSolution tspSol = bbSolver.getTSPSolution();
+			//need to fix route for the sepIntVal node
+			std::vector<int> tourUpdate = tspSol.tour;
+			std::vector<int> newR;
+			std::vector<int> routeH;
+			std::vector<int> routeT;
+			bool flagTT = false;
+			bool flagHH = false;
+			for (auto val : tourUpdate) {
+				if (val != sepIntVal && flagTT == false) {
+					routeT.push_back(val);
+				}
+				else if (val != sepIntVal && flagHH == true) {
+					routeH.push_back(val);
+				}
+				else if (val == sepIntVal && flagTT == false && flagHH == false) {
+					if (routeT.size() != 0) {
+						routeT.push_back(val);
+						flagTT = true;
+					}
+					else {
+						routeH.push_back(val);
+						flagHH = true;
+					}
+				}
+				else if (val == sepIntVal && flagTT == true && flagHH == false) {
+					routeH.push_back(val);
+					flagHH = true;
+				}
+				else if (val == sepIntVal && flagTT == false && flagHH == true) {
+					routeT.push_back(val);
+					flagTT = true;
+				}
+			}
+			if (flagHH == false) {
+				routeH.push_back(sepIntVal);
+			}
+			if (flagTT == false) {
+				routeT.push_back(sepIntVal);
 			}
 			//populate new route
-			for (auto it : routeHead) {
-				newRoute.push_back(it);
+			for (auto it : routeH) {
+				newR.push_back(it);
 			}
-			for (auto it : routeTail) {
-				newRoute.push_back(it);
+			for (auto it : routeT) {
+				newR.push_back(it);
 			}
-			//std::cout << "\nNew route: " << std::endl;
-			//for (auto it: newRoute) {
-			//	std::cout << it << " ";
-			//}
-			for (int i = 0; i < route.size(); i++) {
-				route[i] = newRoute.at(i);
+			std::cout << " " << std::endl;
+			for (int i = 0; i < newR.size(); i++) {
+				route[i] = newR.at(i);
+				std::cout << route.at(i) << " ";
 			}
+			std::cout << " " << std::endl;
 		}
 	}
 	//calculate cost for each route
@@ -1000,6 +1061,7 @@ void Tabusearch::performTspHeuristics() {
 		incumbentCosts.push_back(cost);
 		std::cout << "\nUpdated route cost : " << cost << std::endl;
 	}
+
 	//print the routes
 	//combining things together
 	double totalCost = 0;
